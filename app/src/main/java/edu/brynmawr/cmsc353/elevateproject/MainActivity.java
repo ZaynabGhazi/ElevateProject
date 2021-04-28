@@ -5,6 +5,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 import android.content.Intent;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mAbDrawerToggle;
     private NavigationView mNavigationView;
     private BottomNavigationView mBottomNavigationView;
+    private FragmentManager mfragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,37 @@ public class MainActivity extends AppCompatActivity {
             currentUser = (User) Parcels.unwrap(getIntent().getParcelableExtra("currentuser"));
             Toast.makeText(MainActivity.this,"Welcome "+currentUser.getUserId(),Toast.LENGTH_SHORT).show();
         }
+        mfragmentManager = getSupportFragmentManager();
         setupFragments();
     }
 
     private void setupFragments() {
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                //Fragment fragment;
+                switch(item.getItemId()){
+                    case R.id.opporunitiesView:
+                        //code fragment to go to opportunities
+                        break;
+
+                    case R.id.threadView:
+                        //code fragment to go to q&a
+                        break;
+                    case R.id.connectView:
+                        //code fragment to go to connect/matching
+                        break;
+                    case R.id.profileView:
+                        //code fragment to see profile
+                        break;
+                }
+                //UNCOMMENT THIS WHEN YOU IMPLEMENT FRAGMENTS
+                //mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
+                return true;
+            }
+        });
+        mBottomNavigationView.setSelectedItemId(R.id.opporunitiesView);
     }
 
     private void setupNavigationDrawer() {
