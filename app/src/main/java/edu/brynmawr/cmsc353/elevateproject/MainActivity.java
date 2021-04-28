@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.parceler.Parcels;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mAbDrawerToggle;
     private NavigationView mNavigationView;
-
+    private BottomNavigationView mBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
             currentUser = (User) Parcels.unwrap(getIntent().getParcelableExtra("currentuser"));
             Toast.makeText(MainActivity.this,"Welcome "+currentUser.getUserId(),Toast.LENGTH_SHORT).show();
         }
+        setupFragments();
+    }
+
+    private void setupFragments() {
+        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
     }
 
     private void setupNavigationDrawer() {
