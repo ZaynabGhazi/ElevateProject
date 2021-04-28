@@ -12,11 +12,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class AuthenticatetTask extends AsyncTask<String, String, Integer> {
+public class SignupTask extends AsyncTask<String, String, Integer> {
 
     Context mContext;
     String TAG = "AUTHENTICATE TASK";
-    public AuthenticatetTask(Context context){
+    public SignupTask(Context context){
         mContext = context;
     }
 
