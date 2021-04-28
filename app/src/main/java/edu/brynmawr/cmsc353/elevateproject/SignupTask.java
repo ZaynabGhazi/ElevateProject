@@ -15,7 +15,7 @@ import java.net.URL;
 public class SignupTask extends AsyncTask<String, String, Integer> {
 
     Context mContext;
-    String TAG = "AUTHENTICATE TASK";
+    String TAG = "SIGNUP TASK";
     public SignupTask(Context context){
         mContext = context;
     }

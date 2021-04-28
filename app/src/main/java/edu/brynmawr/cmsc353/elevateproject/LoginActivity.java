@@ -7,10 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,10 +31,20 @@ public class LoginActivity extends AppCompatActivity {
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Log.i(TAG, "Login button clicked");
+                String email = mEtEmail.getText().toString();
+                String password = mEtPassword.getText().toString();
+                loginUser(email, password);
             }
         });
     }
+
+    private void loginUser(String email, String password) {
+        String url = "http://10.0.2.2:3000/api/user/login";
+        LoginTask task = new LoginTask(LoginActivity.this);
+        task.execute(url,email,password);
+    }
+
     private void makeSingup(){
         mBtnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,12 +59,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signupUser(String email, String password) {
-        // assumes that there is a server running on the AVD's host on port 3000
-        // and that it has a /test endpoint that returns a JSON object with
-        // a field called "status"
         String url = "http://10.0.2.2:3000/api/user/signup";
-
-        AuthenticatetTask task = new AuthenticatetTask(LoginActivity.this);
+        SignupTask task = new SignupTask(LoginActivity.this);
         task.execute(url,email,password);
     }
 
