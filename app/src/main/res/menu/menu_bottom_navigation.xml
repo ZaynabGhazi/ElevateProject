@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/opporunitiesView"
+        android:enabled="true"
+        android:icon="@drawable/ic_opportunities"
+        android:title="@string/text_opportunities"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/threadView"
+        android:enabled="true"
+        android:icon="@drawable/ic_threads"
+        android:title="@string/text_thread"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/connectView"
+        android:enabled="true"
+        android:icon="@drawable/ic_connect"
+        android:title="@string/text_connect"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/profileView"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/text_profile"
+        app:showAsAction="ifRoom" />
+</menu>
