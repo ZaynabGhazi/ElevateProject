@@ -3,6 +3,7 @@ package edu.brynmawr.cmsc353.elevateproject.models;
 import android.os.Parcelable;
 
 import org.parceler.Parcel;
+import java.util.*;
 
 @Parcel
 public class User {
@@ -11,6 +12,9 @@ public class User {
     private String firstname;
     private String lastname;
     private String userId;
+    private List<String> connections;
+    private List<String> requests;
+
 
 
     public User(){}
@@ -34,6 +38,10 @@ public class User {
         return userId;
     }
 
+    public List<String> getConnections(){return connections;}
+
+    public List<String> getRequests(){return requests;}
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -53,6 +61,12 @@ public class User {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    public void setConnections(List<String> connections){this.connections = connections; }
+
+    public void setRequests(List<String> requests){this.requests= requests; }
+
+
 
 
 }

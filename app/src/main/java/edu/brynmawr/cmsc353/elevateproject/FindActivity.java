@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.*;
+import android.widget.*;
+import android.util.*;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class FindActivity extends AppCompatActivity {
     Button mButton;
@@ -50,14 +55,20 @@ public class FindActivity extends AppCompatActivity {
 
             MyTask task = new MyTask();
             task.execute(url); // fill the results with all searched users
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linear);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            for(int i = 0; i<results.size(); i++){
+                TextView textView = new TextView(this);
+                textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
+                textView.setText(results.get(i).getString("firstname") + " " + results.get(i).getString("lastname"));
+                Button addButton = new Button(this) ;
+                addButton.setText("add");
+                linearLayout.addView(textView);
+                linearLayout.addView(addButton);
+            }
+            results.clear();
 
-//            String output = "";
-//            for(int i = 0; i<results.size(); i++){
-//                output += results.get(i).getString("lastname");
-//                output += " ";
-//            }
-//         //   mText.setText(firstname);
-//            mText.setText(output);
 
         }
         catch (Exception e) {
