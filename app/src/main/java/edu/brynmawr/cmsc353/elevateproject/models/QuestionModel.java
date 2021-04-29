@@ -1,5 +1,7 @@
 package edu.brynmawr.cmsc353.elevateproject.models;
 
+import android.graphics.Bitmap;
+
 public class QuestionModel {
     private String userName;
     private String title;
@@ -8,8 +10,9 @@ public class QuestionModel {
     private int numLikes;
     private int numComments;
     private int[] commentID;
+    private Bitmap image;
 
-    public QuestionModel(String userName, String title, String content, int numLikes, int numComments, int[] commentID, String date) {
+    public QuestionModel(String userName, String title, String content, int numLikes, int numComments, int[] commentID, String date, Bitmap image) {
         this.userName = userName;
         this.title = title;
         this.content = content;
@@ -17,6 +20,7 @@ public class QuestionModel {
         this.numComments = numComments;
         this.commentID = commentID;
         this.date = date;
+        this.image = image;
     }
 
     public String getUserName() {
@@ -73,5 +77,13 @@ public class QuestionModel {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }

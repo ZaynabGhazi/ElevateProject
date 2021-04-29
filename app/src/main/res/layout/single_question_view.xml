@@ -62,6 +62,14 @@
         tools:text="How do you change text/font settings in an TextView?
         \n For example, how do you make the text bold?" />
 
+    <ImageView
+        android:id="@+id/question_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
     <LinearLayout
         android:layout_width="138dp"
         android:layout_height="29dp"

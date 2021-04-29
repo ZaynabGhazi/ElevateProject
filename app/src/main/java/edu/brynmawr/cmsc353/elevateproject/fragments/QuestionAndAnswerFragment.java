@@ -3,9 +3,15 @@ package edu.brynmawr.cmsc353.elevateproject.fragments;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +53,6 @@ import edu.brynmawr.cmsc353.elevateproject.models.QuestionModel;
 import static android.app.Activity.RESULT_OK;
 
 public class QuestionAndAnswerFragment extends Fragment {
-    LinearLayout linearLayout;
     RecyclerView questionFeedRecyclerView;
     RecyclerView commentFeedRecyclerView;
     String currentUserID;
@@ -55,6 +61,7 @@ public class QuestionAndAnswerFragment extends Fragment {
     int SELECT_PICTURE = 200;  // constant to compare the activity result code
     String imagePath = "";
     FloatingActionButton addQuestionButton;
+    Bitmap uploadedImage;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -156,17 +163,11 @@ public class QuestionAndAnswerFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
             if (requestCode == SELECT_PICTURE) {
                 // Get the uri of the image from data
                 Uri selectedImageUri = data.getData();
-                File file = new File(selectedImageUri.getPath());
-                String path = file.getPath();
-                imagePath = path;
-
-//                InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                Toast.makeText(getActivity(), "File " + path + " selected!", Toast.LENGTH_LONG).show();
+                uploadedImage = loadFromUri(selectedImageUri);
+                Toast.makeText(getActivity(), "File " + selectedImageUri.getPath() + " selected!", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -223,7 +224,13 @@ public class QuestionAndAnswerFragment extends Fragment {
                     commentString = "[" + commentString + "]";
                     JSONArray commentArray = new JSONArray(commentString);
                     int numComments = commentArray.length();
-                    QuestionModel questionModel = new QuestionModel(username, title, content, 0, numComments, new int[1], date);
+                    Bitmap image = null;
+                    if (currentQuestion.has("image")) {
+                        String encodedImage = currentQuestion.get("image").toString();
+                        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                        image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    }
+                    QuestionModel questionModel = new QuestionModel(username, title, content, 0, numComments, new int[1], date, image);
                     questionModels.add(questionModel);
                     String id = jsonArray.getJSONObject(i).get("_id").toString();
                     questionIds.add(id);
@@ -250,15 +257,47 @@ public class QuestionAndAnswerFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
+
             String title = strings[0];
             String content = strings[1];
-            System.out.println(title + " " + content + " " + imagePath);
+            String data = null;
             HttpURLConnection connection;
             InputStream is = null;
+            if (uploadedImage == null) {
+                JSONObject j = new JSONObject();
+                try {
+                    j.put("title", title);
+                    j.put("content", content);
+                    j.put("userId", currentUserID);
+                    j.put("userName", currentUserName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    System.out.println("Cannot parse JSon!");
+                    return null;
+                }
+                data = j.toString();
+            } else {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                uploadedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] imageBytes = baos.toByteArray();
+                String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                JSONObject j = new JSONObject();
+                try {
+                    j.put("title", title);
+                    j.put("content", content);
+                    j.put("userId", currentUserID);
+                    j.put("userName", currentUserName);
+                    j.put("image", encodedImage);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    System.out.println("Cannot parse JSon!");
+                    return null;
+                }
+                data = j.toString();
+            }
+            URL url;
             try {
-                String data = "{\"title\":\"" + strings[0] + "\",\"content\":\"" + strings[1] + "\",\"userId\":\"" + currentUserID + "\",\"userName\":\"" + currentUserName + "\"}";
-                System.out.println(data);
-                URL url = new URL("http://10.0.2.2:3000/api/question/post_question");
+                url = new URL("http://10.0.2.2:3000/api/question/post_question");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json");
@@ -303,6 +342,7 @@ public class QuestionAndAnswerFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            uploadedImage = null;
             Toast.makeText(getActivity(), "Question uploaded! Please go back to the q&a feed!", Toast.LENGTH_LONG).show();
             new RetrieveFeedTask().execute();
         }
@@ -429,5 +469,23 @@ public class QuestionAndAnswerFragment extends Fragment {
             Toast.makeText(getActivity(), "Comment uploaded! Please refresh feed to see your comment!", Toast.LENGTH_LONG).show();
             new RetrieveFeedTask().execute();
         }
+    }
+
+    private Bitmap loadFromUri(Uri photoUri) {
+        Bitmap image = null;
+        try {
+            // check version of Android on device
+            if(Build.VERSION.SDK_INT > 27){
+                // on newer versions of Android, use the new decodeBitmap method
+                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), photoUri);
+                image = ImageDecoder.decodeBitmap(source);
+            } else {
+                // support older versions of Android by using getBitmap
+                image = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), photoUri);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 }

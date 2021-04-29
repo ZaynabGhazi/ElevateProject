@@ -18,6 +18,7 @@ public class SingleQuestionHolder extends RecyclerView.ViewHolder {
     private final TextView numLikes;
     private final TextView numComments;
     private final ImageView avatar;
+    private final ImageView questionImage;
 
     public SingleQuestionHolder(final View itemView, QuestionAdapter.ClickCallback callback) {
         super(itemView);
@@ -28,6 +29,7 @@ public class SingleQuestionHolder extends RecyclerView.ViewHolder {
         numLikes = itemView.findViewById(R.id.num_likes);
         numComments = itemView.findViewById(R.id.num_comments);
         avatar = itemView.findViewById(R.id.avatar);
+        questionImage = itemView.findViewById(R.id.question_image);
         ImageButton commentBtn = itemView.findViewById(R.id.comment_button);
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,5 +47,9 @@ public class SingleQuestionHolder extends RecyclerView.ViewHolder {
         numLikes.setText(String.valueOf(viewModel.getNumLikes()));
         numComments.setText(String.valueOf(viewModel.getNumComments()));
         avatar.setImageResource(R.mipmap.avatar);
+        if (viewModel.getImage() != null) {
+            questionImage.setImageBitmap(viewModel.getImage());
+            questionImage.setVisibility(View.VISIBLE);
+        }
     }
 }
