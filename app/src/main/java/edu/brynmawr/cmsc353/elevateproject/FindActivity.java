@@ -3,15 +3,15 @@ package edu.brynmawr.cmsc353.elevateproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -19,13 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Set;
 
 public class FindActivity extends AppCompatActivity {
+
     Button mButton;
     EditText mEdit1;
     EditText mEdit2;
     TextView mText;
+    ArrayList<String> profiles = new ArrayList<String>();
 
     
     @Override
@@ -36,6 +37,7 @@ public class FindActivity extends AppCompatActivity {
         mEdit1 = (EditText)findViewById(R.id.editText1); // search object
         mEdit2 = (EditText)findViewById(R.id.editText2); // feature the user is searching for
         mText = (TextView)findViewById(R.id.textView1);
+
 
     }
 
@@ -49,8 +51,14 @@ public class FindActivity extends AppCompatActivity {
             MyTask task = new MyTask();
             task.execute(url);
             String firstname = task.get();
+            Log.d("FindActivity", firstname);
+            profiles.add(firstname);
 
-            mText.setText(firstname);
+            Intent listViewIntent = new Intent(this, ProfileList.class);
+            Log.d("FindActivity", "intent created");
+            listViewIntent.putStringArrayListExtra("Profiles", profiles);
+            Log.d("FindActivity", "profiles added to extra");
+            startActivity(listViewIntent);
 
         }
         catch (Exception e) {
