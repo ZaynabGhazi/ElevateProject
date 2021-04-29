@@ -20,13 +20,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.*;
 
 public class FindActivity extends AppCompatActivity {
     Button mButton;
     EditText mEdit1;
     EditText mEdit2;
     TextView mText;
-
+    //Set<JSONObject> results = new java.util.HashSet<JSONObject>();
+    static List<JSONObject> results = new ArrayList<JSONObject>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +49,15 @@ public class FindActivity extends AppCompatActivity {
             URL url = new URL("http://10.0.2.2:3000/api/user/find?" + feature + "=" + request);
 
             MyTask task = new MyTask();
-            task.execute(url);
-            String firstname = task.get();
+            task.execute(url); // fill the results with all searched users
 
-            mText.setText(firstname);
+//            String output = "";
+//            for(int i = 0; i<results.size(); i++){
+//                output += results.get(i).getString("lastname");
+//                output += " ";
+//            }
+//         //   mText.setText(firstname);
+//            mText.setText(output);
 
         }
         catch (Exception e) {
@@ -60,9 +67,9 @@ public class FindActivity extends AppCompatActivity {
         }
     }
 
-    private static class MyTask extends AsyncTask<URL, String, String>{
+    private static class MyTask extends AsyncTask<URL, Void, Void>{
         @Override
-        protected String doInBackground(URL...urls){
+        protected Void doInBackground(URL...urls){
             try {
                 URL url = urls[0];
 
@@ -73,13 +80,18 @@ public class FindActivity extends AppCompatActivity {
                 Scanner in = new Scanner(url.openStream());
                 String response = in.nextLine();
 
-                JSONObject jo = new JSONObject(response);
-                String firstname = jo.getString("firstname");
-                return firstname; // for testing convenience now only return the firstname of one object
+                //JSONObject jo = new JSONObject(response);
+                JSONArray array = new JSONArray(response);
+                for(int i = 0; i < array.length(); i++){
+                    JSONObject obj = array.getJSONObject(i);
+                    results.add(obj);
+                }
+                return null;
 
             }
             catch (Exception e) {
-                return e.toString();
+                //return e.toString();
+                return null;
             }
         }
     }
