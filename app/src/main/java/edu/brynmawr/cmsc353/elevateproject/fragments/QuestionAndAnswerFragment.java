@@ -303,6 +303,7 @@ public class QuestionAndAnswerFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Toast.makeText(getActivity(), "Question uploaded! Please go back to the q&a feed!", Toast.LENGTH_LONG).show();
             new RetrieveFeedTask().execute();
         }
     }
@@ -425,8 +426,8 @@ public class QuestionAndAnswerFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Toast.makeText(getActivity(), "Comment uploaded! Please refresh feed to see your comment!", Toast.LENGTH_LONG).show();
             new RetrieveFeedTask().execute();
-            new GetCommentsTask().execute(questionId);
         }
     }
 }

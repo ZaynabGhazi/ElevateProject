@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity {
                         bundle.putString("userId", currentUser.getUserId());
                         fragment = new QuestionAndAnswerFragment();
                         fragment.setArguments(bundle);
-                        mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
+                        mfragmentManager.beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.flContainer,fragment)
+                                .commit();
                         break;
                     case R.id.connectView:
                         //code fragment to go to connect/matching
