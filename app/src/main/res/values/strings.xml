@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ElevateProject</string>
+    <string name="Open">open</string>
+    <string name="Close">close</string>
+    <string name="text_opportunities">Opportunities</string>
+    <string name="text_thread">Threads</string>
+    <string name="text_connect">Connect</string>
+    <string name="text_profile">Profile</string>
 </resources>
