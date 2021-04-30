@@ -73,16 +73,13 @@ public class FindActivity extends AppCompatActivity {
                 textView.setText(current.getString("firstname") + " " + results.get(i).getString("lastname"));
                 Button addButton = new Button(this) ;
                 addButton.setText("add");
-               // addButton.setTag("60861acfb46c2419128a7c9e");
                 addButton.setTag(current.getString("_id"));
                 addButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View view) {
-                      //  User currentUser = (User) Parcels.unwrap(getIntent().getParcelableExtra("currentuser"));
-                       // Log.d("on click add button", currentUser.getUserId());
                         Log.d("on clock add button", (String)addButton.getTag());
                         try {
-                            URL url = new URL("http://10.0.2.2:3000/api/user/connect?" + "id_receiver" + "=" + (String)view.getTag()+ "&" + "id_sender" + "=" + "60861acfb46c2419128a7c9e");
+                            URL url = new URL("http://10.0.2.2:3000/api/user/connect?" + "id_receiver" + "=" + (String)view.getTag()+ "&" + "id_sender" + "=" + getIntent().getStringExtra("userId"));
                             Log.d("on click add button", (String)view.getTag());
                             RequestTask task = new RequestTask();
                             task.execute(url);
@@ -122,11 +119,7 @@ public class FindActivity extends AppCompatActivity {
                 String response = in.nextLine();
 
                 JSONObject jo = new JSONObject(response);
-             //   JSONArray array = new JSONArray(response);
-//                for(int i = 0; i < array.length(); i++){
-//                    JSONObject obj = array.getJSONObject(i);
-//                    results.add(obj);
-////                }
+
                 return jo.getString("message");
 
             }

@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.connectView:
                         Intent connectionsIntent = new Intent(getBaseContext(), FindActivity.class);
+                        connectionsIntent.putExtra("userId", currentUser.getUserId());
                         startActivity(connectionsIntent);
                         break;
                     case R.id.profileView:
