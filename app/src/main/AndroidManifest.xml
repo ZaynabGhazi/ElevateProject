@@ -20,6 +20,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ProfileList">
+
+        </activity>
+
+        <activity android:name=".NotificationActivity">
+
+        </activity>
+
         <activity android:name=".MainActivity">
 
         </activity>
@@ -33,5 +41,7 @@
         </activity>
 
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

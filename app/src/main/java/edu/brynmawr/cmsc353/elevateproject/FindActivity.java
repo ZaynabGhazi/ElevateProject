@@ -3,8 +3,10 @@ package edu.brynmawr.cmsc353.elevateproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,11 +41,14 @@ public class FindActivity extends AppCompatActivity {
     Button mButton;
     EditText mEdit1;
     EditText mEdit2;
+    static String profile = "";
+
     TextView mText;
     JSONObject current;
     //Set<JSONObject> results = new java.util.HashSet<JSONObject>();
     static List<JSONObject> results = new ArrayList<JSONObject>();
-    
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +101,13 @@ public class FindActivity extends AppCompatActivity {
             }
             results.clear();
 
+//            String output = "";
+//            for(int i = 0; i<results.size(); i++){
+//                output += results.get(i).getString("lastname");
+//                output += " ";
+//            }
+//         //   mText.setText(firstname);
+//            mText.setText(output);
 
         }
         catch (Exception e) {
