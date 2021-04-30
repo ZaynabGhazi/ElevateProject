@@ -81,7 +81,7 @@ public class FindActivity extends AppCompatActivity {
                 current = results.get(i);
                 textView.setText(current.getString("firstname") + " " + results.get(i).getString("lastname"));
                 Button addButton = new Button(this) ;
-                addButton.setText("add");
+                addButton.setText("Connect");
                 addButton.setTag(current.getString("_id"));
                 addButton.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -104,7 +104,7 @@ public class FindActivity extends AppCompatActivity {
                 linearLayout.addView(addButton);
             }
             results.clear();
-            
+
         }
         catch (Exception e) {
             // uh oh

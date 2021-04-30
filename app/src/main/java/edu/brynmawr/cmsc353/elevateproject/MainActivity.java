@@ -11,6 +11,8 @@ import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +23,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.parceler.Parcels;
+
+import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,9 +95,18 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
+                    Log.e("notify", "here!");
                     //write code to connect to notification activity/fragment
-                    Intent connectionsIntent = new Intent(getBaseContext(), NotificationActivity.class);
-                    startActivity(connectionsIntent);
+                    Intent notificationIntent = new Intent(getBaseContext(), NotificationActivity.class);
+                    List<String> requests = currentUser.getRequests();
+                    String requests_str = "";
+                    for(int i = 0; i< requests.size(); i++){
+                        requests_str+="request=";
+                        requests_str += requests.get(i);
+                        if(i!=requests.size()-1) requests_str+="&";
+                    }
+                    notificationIntent.putExtra("currentRequests", requests_str);
+                    startActivity(notificationIntent);
                 }
                 return true;
             }
