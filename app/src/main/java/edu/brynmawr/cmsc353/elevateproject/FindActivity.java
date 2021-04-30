@@ -65,7 +65,11 @@ public class FindActivity extends AppCompatActivity {
 
             String feature = mEdit2.getText().toString();
             String request = mEdit1.getText().toString();
-            URL url = new URL("http://10.0.2.2:3000/api/user/find?" + feature + "=" + request);
+            URL url;
+            if(feature.equals("firstname"))
+                url = new URL("http://10.0.2.2:3000/api/user/findbyfn?firstname=" + request);
+            else // search by lastname
+                url = new URL("http://10.0.2.2:3000/api/user/findbyln?lastname=" + request);
             MyTask task = new MyTask();
             task.execute(url); // fill the results with all searched users
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linear);
@@ -100,15 +104,7 @@ public class FindActivity extends AppCompatActivity {
                 linearLayout.addView(addButton);
             }
             results.clear();
-
-//            String output = "";
-//            for(int i = 0; i<results.size(); i++){
-//                output += results.get(i).getString("lastname");
-//                output += " ";
-//            }
-//         //   mText.setText(firstname);
-//            mText.setText(output);
-
+            
         }
         catch (Exception e) {
             // uh oh
