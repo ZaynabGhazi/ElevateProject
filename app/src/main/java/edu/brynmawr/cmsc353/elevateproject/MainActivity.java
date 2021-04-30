@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (id == R.id.notifications){
                     //write code to connect to notification activity/fragment
+                    Intent connectionsIntent = new Intent(getBaseContext(), NotificationActivity.class);
+                    startActivity(connectionsIntent);
                 }
                 return true;
             }
