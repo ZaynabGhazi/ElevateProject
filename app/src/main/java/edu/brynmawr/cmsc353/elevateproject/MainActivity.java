@@ -3,15 +3,20 @@ package edu.brynmawr.cmsc353.elevateproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -85,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
-                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                    startActivity(intent);
+                    //write code to connect to notification activity/fragment
+                    Intent connectionsIntent = new Intent(getBaseContext(), NotificationActivity.class);
+                    startActivity(connectionsIntent);
                 }
                 return true;
             }

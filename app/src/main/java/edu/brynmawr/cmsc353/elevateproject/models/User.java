@@ -1,11 +1,9 @@
 package edu.brynmawr.cmsc353.elevateproject.models;
 
-import android.app.DownloadManager;
 import android.os.Parcelable;
 
 import org.parceler.Parcel;
-
-import java.util.ArrayList;
+import java.util.*;
 
 @Parcel
 public class User {
@@ -14,8 +12,9 @@ public class User {
     private String firstname;
     private String lastname;
     private String userId;
-    private ArrayList<String> requests;
-    private ArrayList<String> connections;
+    private List<String> connections;
+    private List<String> requests;
+
 
 
     public User(){}
@@ -39,9 +38,9 @@ public class User {
         return userId;
     }
 
-    public ArrayList<String> getRequests() { return requests; }
+    public List<String> getConnections(){return connections;}
 
-    public ArrayList<String> getConnections() { return connections; }
+    public List<String> getRequests(){return requests;}
 
     public void setEmail(String email) {
         this.email = email;
@@ -63,31 +62,11 @@ public class User {
         this.userId = userId;
     }
 
-    public void setRequests(ArrayList<String> requests) { this.requests = requests; }
+    public void setConnections(List<String> connections){this.connections = connections; }
 
-    public void setConnections(ArrayList<String> connections) { this.connections = connections; }
+    public void setRequests(List<String> requests){this.requests= requests; }
 
-    public void addRequest(String userId) {
-        ArrayList<String> connectionList = getConnections();
-        if (!(connectionList.contains(userId))) {
-            ArrayList<String> requestList = getRequests();
-            requestList.add(userId);
-            setRequests(requestList);
-        }
-    }
 
-    public void acceptConnection(String userId) {
-        ArrayList<String> requestList = getRequests();
-        ArrayList<String> connectionList = getConnections();
-        if (requestList.contains(userId)){
-            if (!(connectionList.contains(userId))) {
-                connectionList.add(userId);
-            }
-            requestList.remove(userId);
-        }
-        setRequests(requestList);
-        setConnections(connectionList);
-    }
 
 
 }
