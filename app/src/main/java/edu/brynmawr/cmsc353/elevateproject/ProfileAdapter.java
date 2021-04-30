@@ -16,22 +16,24 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     List<String> profiles;
     Context context;
     
-    public ProfileAdapter(Context context, List<String> profiles){
+    public ProfileAdapter(Context context, List<String> results){
         this.context = context;
-        this.profiles = profiles;
+        this.profiles = results;
     }
     
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         Log.d("ProfileAdapter", "onCreteViewHolder");
-        View profileView = LayoutInflater.from(context).inflate(R.layout.item_findprofile, parent, false);
+        View profileView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_findprofile, parent, false);
         return new ViewHolder(profileView);
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         Log.d("ProfileAdapter", "onBindViewHolder " + position);
-        String profile = profiles.get(position);
+        String result = profiles.get(position);
+        String[] keys = result.split(" ");
+        String profile = keys[0] + " " + keys[1];
         holder.bind(profile);
     }
 

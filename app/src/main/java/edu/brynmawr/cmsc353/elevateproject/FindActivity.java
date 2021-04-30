@@ -27,11 +27,12 @@ public class FindActivity extends AppCompatActivity {
     Button mButton;
     EditText mEdit1;
     EditText mEdit2;
-    TextView mText;
-    ArrayList<String> profiles = new ArrayList<String>();
+    static TextView mText;
+    static String profile = "";
 
     //Set<JSONObject> results = new java.util.HashSet<JSONObject>();
     static List<JSONObject> results = new ArrayList<JSONObject>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +54,19 @@ public class FindActivity extends AppCompatActivity {
 
             MyTask task = new MyTask();
             task.execute(url); // fill the results with all searched users
-            Log.d("FindActivity", firstname);
-            profiles.add(firstname);
 
-//            String output = "";
-//            for(int i = 0; i<results.size(); i++){
-//                output += results.get(i).getString("lastname");
-//                output += " ";
-//            }
-//         //   mText.setText(firstname);
-//            mText.setText(output);
+            Log.d("FindActivity", profile);
+            String output = "";
+            for(int i = 0; i<results.size(); i++){
+                output += results.get(i).getString("lastname");
+                output += " ";
+            }
+            //   mText.setText(firstname);
+            mText.setText(output);
 
-            Intent listViewIntent = new Intent(this, ProfileList.class);
+            Intent listViewIntent = new Intent(FindActivity.this, ProfileList.class);
             Log.d("FindActivity", "intent created");
-            listViewIntent.putStringArrayListExtra("Profiles", profiles);
+            listViewIntent.putExtra("results", profile);
             Log.d("FindActivity", "profiles added to extra");
             startActivity(listViewIntent);
         }
@@ -96,6 +96,14 @@ public class FindActivity extends AppCompatActivity {
                     JSONObject obj = array.getJSONObject(i);
                     results.add(obj);
                 }
+
+                for(int i = 0; i<results.size(); i++){
+                    profile += results.get(i).getString("firstname") + " ";
+                    profile += results.get(i).getString("lastname") + " ";
+                    profile += results.get(i).getString("_id");
+                    profile += ";";
+                }
+
                 return null;
 
             }
