@@ -20,13 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
-
-import edu.brynmawr.cmsc353.elevateproject.models.User;
-
-public class NotificationActivity extends AppCompatActivity {
-    private User currentUser;
-   // static List<JSONObject> requests_obj = new ArrayList<JSONObject>();
-
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +29,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.brynmawr.cmsc353.elevateproject.models.User;
+
 public class NotificationActivity extends AppCompatActivity {
+    private User currentUser;
+   // static List<JSONObject> requests_obj = new ArrayList<JSONObject>();
 
     List<String> notifications;
 

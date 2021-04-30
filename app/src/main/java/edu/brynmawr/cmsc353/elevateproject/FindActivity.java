@@ -41,7 +41,6 @@ public class FindActivity extends AppCompatActivity {
     Button mButton;
     EditText mEdit1;
     EditText mEdit2;
-    static TextView mText;
     static String profile = "";
 
     TextView mText;
