@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="76dp"
+        android:layout_height="48dp"
+        tools:srcCompat="@mipmap/avatar" />
+
+    <LinearLayout
+        android:layout_width="321dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:padding="5dp">
+
+      <TextView
+          android:id="@+id/user_name"
+          android:layout_width="112dp"
+          android:layout_height="wrap_content"
+          tools:text="@tools:sample/full_names" />
+
+      <TextView
+          android:id="@+id/date"
+          android:layout_width="321dp"
+          android:layout_height="wrap_content"
+          tools:text="@tools:sample/date/mmddyy" />
+
+    </LinearLayout>
+  </LinearLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:padding="8dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        tools:text="How do you change text to bold in Android?" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:text="How do you change text/font settings in an TextView?
+        \n For example, how do you make the text bold?" />
+
+    <ImageView
+        android:id="@+id/question_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <LinearLayout
+        android:layout_width="138dp"
+        android:layout_height="29dp"
+        android:paddingTop="3dp"
+        android:orientation="horizontal">
+
+      <LinearLayout
+          android:layout_width="68dp"
+          android:layout_height="match_parent"
+          android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@mipmap/like" />
+
+        <TextView
+            android:id="@+id/num_likes"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            tools:text="12" />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="105dp"
+          android:layout_height="match_parent"
+          android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/comment_button"
+            android:layout_width="37dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@mipmap/comment" />
+
+        <TextView
+            android:id="@+id/num_comments"
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            tools:text="3" />
+      </LinearLayout>
+
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
