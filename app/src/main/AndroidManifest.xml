@@ -10,8 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.ElevateProject">
+        android:theme="@style/Theme.ElevateProject"
+        android:usesCleartextTraffic="true">
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,9 +19,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ProfileList">
+
+        </activity>
+
+        <activity android:name=".NotificationActivity">
+
+        </activity>
+
         <activity android:name=".MainActivity">
 
         </activity>
+
+        <activity android:name=".FindActivity">
+
+        </activity>
+
+        <activity android:name=".ProfileActivity">
+
+        </activity>
+
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>
