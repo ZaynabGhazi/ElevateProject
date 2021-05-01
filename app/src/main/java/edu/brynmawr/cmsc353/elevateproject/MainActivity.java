@@ -22,6 +22,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private User currentUser;
@@ -91,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
-                    //write code to connect to notification activity/fragment
-                    Intent connectionsIntent = new Intent(getBaseContext(), NotificationActivity.class);
-                    startActivity(connectionsIntent);
+                    Intent notificationsIntent = new Intent(getBaseContext(), NotificationActivity.class);
+                    notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
+                    startActivity(notificationsIntent);
                 }
                 return true;
             }
@@ -106,4 +108,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         return super.onOptionsItemSelected(item);
     }
+
+
 }
