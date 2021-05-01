@@ -11,6 +11,7 @@ import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -96,6 +97,19 @@ public class MainActivity extends AppCompatActivity {
                     Intent notificationsIntent = new Intent(getBaseContext(), NotificationActivity.class);
                     notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
                     startActivity(notificationsIntent);
+//                    Yutong's code
+//                    Log.e("notify", "here!");
+//                    //write code to connect to notification activity/fragment
+//                    Intent notificationIntent = new Intent(getBaseContext(), NotificationActivity.class);
+//                    List<String> requests = currentUser.getRequests();
+//                    String requests_str = "";
+//                    for(int i = 0; i< requests.size(); i++){
+//                        requests_str+="request=";
+//                        requests_str += requests.get(i);
+//                        if(i!=requests.size()-1) requests_str+="&";
+//                    }
+//                    notificationIntent.putExtra("currentRequests", requests_str);
+//                    startActivity(notificationIntent);
                 }
                 return true;
             }
@@ -108,6 +122,4 @@ public class MainActivity extends AppCompatActivity {
             return true;
         return super.onOptionsItemSelected(item);
     }
-
-
 }
