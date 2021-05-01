@@ -36,85 +36,42 @@ import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 public class NotificationActivity extends AppCompatActivity {
 
-    private User currentUser;
-
     static List<JSONObject> results = new ArrayList<JSONObject>();
-
     List<String> notifications = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
-        RecyclerView notificationList = findViewById(R.id.notificationList);
-
-        NotificationAdapter notificationAdapter = new NotificationAdapter(NotificationActivity.this, notifications);
-        notificationList.setAdapter(notificationAdapter);
-        notificationList.setLayoutManager((new LinearLayoutManager(this)));
-
-        //get list of requests from intent
-        String requestURL = "";
-        ArrayList<String> requests = getIntent().getStringArrayListExtra("requests");
-        for (int i = 0; i < requests.size(); i++){
-            Log.d("Notification Activity", requests.get(i));
-            if (i == requests.size()-1){
-                requestURL += "request=" + requests.get(i);
-            }
-            else {
-                requestURL += "request=" + requests.get(i) + "&";
-            }
-        }
-        Log.d("Notification Activity", requestURL);
-        try {
-            URL url;
-            url = new URL("http://10.0.2.2:3000/api/user/notify?" + requestURL);
-            Log.d("Notification Activity", "user url: " + url.toString());
-            NotificationActivity.MyTask task = new NotificationActivity.MyTask();
-            task.execute(url); // fill results with all requests
-
-            Log.d("Notification Activity", results.size() + " requests");
-            for (int i = 0; i < results.size(); i++){
-                Log.d("Notification Activity", "searching through results!");
-                String userInfo = "";
-                JSONObject user = results.get(i);
-                userInfo += user.getString("firstname") + " " + user.getString("lastname") + ",";
-                userInfo += user.getString("_id");
-                Log.d("Notification Activity", userInfo);
-                notifications.add(userInfo);
-                notificationAdapter.notifyDataSetChanged();
-            }
-            notificationAdapter.notifyDataSetChanged();
-        } catch (MalformedURLException | JSONException e) {
-            e.printStackTrace();
-            Log.d("Notification Activity", "invalid user!");
-        }
-        notificationAdapter.notifyDataSetChanged();
+        String requestURL = parseRequestUrl();
+        List<String> usersInfo = getUserInfo(requestURL);
+        setUpActivity(usersInfo);
     }
 
-    private static class RequestTask extends AsyncTask<URL, String, String>{
-        @Override
-        protected String doInBackground(URL...urls) {
-            try {
-                URL url = urls[0];
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.connect();
-
-                Scanner in = new Scanner(url.openStream());
-                String response = in.nextLine();
-
-                JSONObject jo = new JSONObject(response);
-
-                return jo.getString("message");
-
-            }
-            catch (Exception e) {
-                //return e.toString();
-                return null;
-            }
-        }
-    }
+//    private static class RequestTask extends AsyncTask<URL, String, String>{
+//        @Override
+//        protected String doInBackground(URL...urls) {
+//            try {
+//                URL url = urls[0];
+//
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                conn.setRequestMethod("GET");
+//                conn.connect();
+//
+//                Scanner in = new Scanner(url.openStream());
+//                String response = in.nextLine();
+//
+//                JSONObject jo = new JSONObject(response);
+//
+//                return jo.getString("message");
+//
+//            }
+//            catch (Exception e) {
+//                //return e.toString();
+//                return null;
+//            }
+//        }
+//    }
 
     private static class MyTask extends AsyncTask<URL, Void, Void>{
         @Override
@@ -145,6 +102,60 @@ public class NotificationActivity extends AppCompatActivity {
                 return null;
             }
         }
+    }
+
+    private String parseRequestUrl(){
+        //get list of requests from intent
+        String requestURL = "";
+        ArrayList<String> requests = getIntent().getStringArrayListExtra("requests");
+        for (int i = 0; i < requests.size(); i++){
+            Log.d("Notification Activity", requests.get(i));
+            if (i == requests.size()-1){
+                requestURL += "request=" + requests.get(i);
+            }
+            else {
+                requestURL += "request=" + requests.get(i) + "&";
+            }
+        }
+        Log.d("Notification Activity", requestURL);
+        return requestURL;
+    }
+
+    private List<String> getUserInfo(String requestURL){
+        List<String> usersInfo = new ArrayList<String>();
+        try {
+            URL url;
+            url = new URL("http://10.0.2.2:3000/api/user/notify?" + requestURL);
+            Log.d("Notification Activity", "user url: " + url.toString());
+            NotificationActivity.MyTask task = new NotificationActivity.MyTask();
+            task.execute(url); // fill results with all requests
+
+            Log.d("Notification Activity", results.size() + " requests");
+            for (int i = 0; i < results.size(); i++){
+                Log.d("Notification Activity", "searching through results!");
+                String userInfo = "";
+                JSONObject user = results.get(i);
+                userInfo += user.getString("firstname") + " " + user.getString("lastname") + ",";
+                userInfo += user.getString("_id");
+                Log.d("Notification Activity", userInfo);
+                usersInfo.add(userInfo);
+            }
+        } catch (MalformedURLException | JSONException e) {
+            e.printStackTrace();
+            Log.d("Notification Activity", "invalid user!");
+        }
+        return usersInfo;
+    }
+
+    private void setUpActivity(List<String> usersInfo){
+        setContentView(R.layout.activity_notification);
+        RecyclerView notificationList = findViewById(R.id.notificationList);
+        Log.d("Notification Activity", "creating view");
+        NotificationAdapter notificationAdapter = new NotificationAdapter(NotificationActivity.this, notifications, getIntent().getStringExtra("id"));
+        notificationList.setAdapter(notificationAdapter);
+        notificationList.setLayoutManager((new LinearLayoutManager(this)));
+        notifications.addAll(usersInfo);
+        notificationAdapter.notifyDataSetChanged();
     }
 }
 

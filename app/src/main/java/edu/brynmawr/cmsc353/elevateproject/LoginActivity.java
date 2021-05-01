@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.parceler.Parcels;
 
@@ -93,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
     private void bindView() {
         mEtEmail = findViewById(R.id.etEmail);
         mEtPassword = findViewById(R.id.etPassword);
-        mBtnLogin = findViewById(R.id.btnLogin);
-        mBtnSignup = findViewById(R.id.btnSignup);
+        mBtnLogin = findViewById(R.id.btnConnect);
+        mBtnSignup = findViewById(R.id.btnReject);
     }
 }

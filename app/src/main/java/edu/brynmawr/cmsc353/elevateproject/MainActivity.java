@@ -23,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
-                    Intent notificationsIntent = new Intent(getBaseContext(), NotificationActivity.class);
+                    Intent notificationsIntent = new Intent(MainActivity.this, NotificationActivity.class);
+                    notificationsIntent.putExtra("id", currentUser.getUserId());
                     notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
                     startActivity(notificationsIntent);
 //                    Yutong's code

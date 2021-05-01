@@ -1,6 +1,7 @@
 package edu.brynmawr.cmsc353.elevateproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     Context context;
     List<String> requests;
+    String userId;
 
-    public NotificationAdapter(Context context, List<String> requests){
+    public NotificationAdapter(Context context, List<String> requests, String userId){
         this.context = context;
         this.requests = requests;
+        this.userId = userId;
     }
 
     @NonNull
@@ -62,10 +65,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestName.setText(info[0]);
             connectBtn.setTag(info[1]);
             rejectBtn.setTag(info[1]);
+
+            container.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    Intent i = new Intent(v.getContext(), ProfileActivity.class);
+                    i.putExtra("name", info[0]);
+                    i.putExtra("receiverId", info[1]);
+                    i.putExtra("userId", userId);
+//                    Log.d("Intent", "name :" + info[0]);
+//                    Log.d("Intent", "receiverID :" + info[1]);
+//                    Log.d("Intent", "userId :" + userId);
+                    v.getContext().startActivity(i);
+                }
+            });
         }
-
-
-
 
     }
 
