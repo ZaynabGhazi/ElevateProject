@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import edu.brynmawr.cmsc353.elevateproject.fragments.QuestionAndAnswerFragment;
 import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 import android.content.Intent;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //Fragment fragment;
+                Fragment fragment;
                 switch(item.getItemId()){
                     case R.id.opporunitiesView:
                         //code fragment to go to opportunities
@@ -61,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.threadView:
                         //code fragment to go to q&a
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", currentUser.getFirstname() + " " + currentUser.getLastname());
+                        bundle.putString("userId", currentUser.getUserId());
+                        fragment = new QuestionAndAnswerFragment();
+                        fragment.setArguments(bundle);
+                        mfragmentManager.beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.flContainer,fragment)
+                                .commit();
                         break;
                     case R.id.connectView:
                         Intent connectionsIntent = new Intent(getBaseContext(), FindActivity.class);
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 //UNCOMMENT THIS WHEN YOU IMPLEMENT FRAGMENTS
-                //mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
+//                mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
                 return true;
             }
         });

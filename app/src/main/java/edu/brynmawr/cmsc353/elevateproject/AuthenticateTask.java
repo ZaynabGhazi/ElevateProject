@@ -56,8 +56,13 @@ public class AuthenticateTask extends AsyncTask<String, String, User> {
                 JSONParser parser = new JSONParser();
                 JSONObject usr = (JSONObject) parser.parse(result);
                 user.setUserId((String) usr.get("_id"));
+
                 user.setConnections((List)usr.get("connections"));
                 user.setRequests((List)usr.get("requests"));
+
+                user.setFirstname((String) usr.get("firstname"));
+                user.setLastname((String) usr.get("lastname"));
+
             }
             conn.disconnect();
             return user;

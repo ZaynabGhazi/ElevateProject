@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="76dp"
+            android:layout_height="48dp"
+            tools:srcCompat="@mipmap/avatar" />
+
+        <LinearLayout
+            android:layout_width="321dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="112dp"
+                android:layout_height="wrap_content"
+                tools:text="@tools:sample/full_names" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="321dp"
+                android:layout_height="wrap_content"
+                tools:text="@tools:sample/date/mmddyy" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="3dp"
+        android:text="TextView"
+        tools:text="TextView questionValue = (TextView) \n findViewById(R.layout.TextView01); \n
+questionValue.setTypeface(null, Typeface.BOLD);" />
+</LinearLayout>
