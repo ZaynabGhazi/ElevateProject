@@ -70,9 +70,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onClick(View v){
                     Intent i = new Intent(v.getContext(), ProfileActivity.class);
-                    i.putExtra("name", info[0]);
+                    i.putExtra("receiverName", info[0]);
                     i.putExtra("receiverId", info[1]);
                     i.putExtra("userId", userId);
+                    i.putExtra("userProfile", false);
 //                    Log.d("Intent", "name :" + info[0]);
 //                    Log.d("Intent", "receiverID :" + info[1]);
 //                    Log.d("Intent", "userId :" + userId);

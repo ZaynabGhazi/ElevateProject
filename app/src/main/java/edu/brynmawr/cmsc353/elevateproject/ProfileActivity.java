@@ -3,6 +3,7 @@ package edu.brynmawr.cmsc353.elevateproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,13 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ProfileActivity  extends AppCompatActivity {
 
 
-    private TextView userName;
+    private TextView profileName;
     private Button btnConnect;
     private Button btnReject;
 
     String receiverId;
-    String name;
+    String receiverName;
     String userId;
+    String userName;
+    Boolean userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,23 +29,39 @@ public class ProfileActivity  extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         retrieveExtras(intent);
         viewSetUp();
-        Log.d("ProfileActivity", "receiverId: " + receiverId);
-        Log.d("ProfileActivity", "name: " + name);
         Log.d("ProfileActivity", "userId: " + userId);
-        userName.setText(name);
-        btnConnect.setTag(receiverId);
-        btnReject.setTag(receiverId);
+        Log.d("ProfileActivity", "user profile? " + userProfile);
+        if (userProfile){
+            profileName.setText(userName);
+            btnConnect.setVisibility(View.GONE);
+            btnReject.setVisibility(View.GONE);
+        }
+        else {
+            Log.d("ProfileActivity", "receiverId: " + receiverId);
+            Log.d("ProfileActivity", "receiverName: " + receiverName);
+            profileName.setText(receiverName);
+            btnConnect.setTag(receiverId);
+            btnReject.setTag(receiverId);
+        }
+
+
     }
 
     private void viewSetUp(){
-        userName = findViewById(R.id.userName);
+        profileName = findViewById(R.id.userName);
         btnConnect = findViewById(R.id.btnConnect);
         btnReject = findViewById(R.id.btnReject);
     }
 
     private void retrieveExtras(Intent intent){
-        receiverId = intent.getStringExtra("receiverId");
-        name = intent.getStringExtra("name");
-        userId = intent.getStringExtra("userId");
+        userProfile = intent.getExtras().getBoolean("userProfile");
+        if (userProfile){
+            userName = intent.getStringExtra("userName");
+        }
+        else {
+            receiverId = intent.getStringExtra("receiverId");
+            userName = intent.getStringExtra("receiverName");
+            userId = intent.getStringExtra("userId");
+        }
     }
 }

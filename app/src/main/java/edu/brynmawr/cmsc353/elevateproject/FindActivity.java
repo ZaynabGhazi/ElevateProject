@@ -42,6 +42,7 @@ public class FindActivity extends AppCompatActivity {
     EditText mEdit1;
     EditText mEdit2;
     static String profile = "";
+    String userId;
 
     TextView mText;
     JSONObject current;
@@ -51,8 +52,10 @@ public class FindActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
+        getExtras(intent);
         mButton = (Button)findViewById(R.id.button1);
         mEdit1 = (EditText)findViewById(R.id.editText1); // search object
         mEdit2 = (EditText)findViewById(R.id.editText2); // feature the user is searching for
@@ -62,7 +65,6 @@ public class FindActivity extends AppCompatActivity {
 
     public void onSubmitButtonClick(View v){
         try {
-
             String feature = mEdit2.getText().toString();
             String request = mEdit1.getText().toString();
             URL url;
@@ -74,43 +76,50 @@ public class FindActivity extends AppCompatActivity {
             task.execute(url); // fill the results with all searched users
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linear);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
-            for(int i = 0; i<results.size(); i++){
-                TextView textView = new TextView(this);
-                textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
-                current = results.get(i);
-                textView.setText(current.getString("firstname") + " " + results.get(i).getString("lastname"));
-                Button addButton = new Button(this) ;
-                addButton.setText("Connect");
-                addButton.setTag(current.getString("_id"));
-                addButton.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("on clock add button", (String)addButton.getTag());
-                        try {
-                            URL url = new URL("http://10.0.2.2:3000/api/user/connect?" + "id_receiver" + "=" + (String)view.getTag()+ "&" + "id_sender" + "=" + getIntent().getStringExtra("userId"));
-                            Log.d("on click add button", (String)view.getTag());
-                            RequestTask task = new RequestTask();
-                            task.execute(url);
-                            Toast.makeText(FindActivity.this, task.get(), Toast.LENGTH_SHORT).show();
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
+            linearLayout.removeAllViews();
+            for(int i = 0; i<results.size(); i++) {
+                String requestId = results.get(i).getString("_id");
+                if (!(userId.equals(requestId))) {
+                    TextView textView = new TextView(this);
+                    textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+                    current = results.get(i);
+                    textView.setText(current.getString("firstname") + " " + results.get(i).getString("lastname"));
+                    Button addButton = new Button(this);
+                    addButton.setText("Connect");
+                    addButton.setTag(requestId);
+                    addButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("on clock add button", (String) addButton.getTag());
+                            try {
+                                URL url = new URL("http://10.0.2.2:3000/api/user/connect?" + "id_receiver" + "=" + (String) view.getTag() + "&" + "id_sender" + "=" + getIntent().getStringExtra("userId"));
+                                Log.d("on click add button", (String) view.getTag());
+                                RequestTask task = new RequestTask();
+                                task.execute(url);
+                                Toast.makeText(FindActivity.this, task.get(), Toast.LENGTH_SHORT).show();
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                });
-                linearLayout.addView(textView);
-                linearLayout.addView(addButton);
+                    });
+                    linearLayout.addView(textView);
+                    linearLayout.addView(addButton);
+                }
             }
             results.clear();
-
         }
         catch (Exception e) {
             // uh oh
             e.printStackTrace();
             mText.setText(e.toString());
         }
+    }
+
+    private void getExtras(Intent intent){
+        userId = intent.getStringExtra("userId");
     }
 
     private static class RequestTask extends AsyncTask<URL, String, String>{
@@ -155,7 +164,18 @@ public class FindActivity extends AppCompatActivity {
                 JSONArray array = new JSONArray(response);
                 for(int i = 0; i < array.length(); i++){
                     JSONObject obj = array.getJSONObject(i);
-                    results.add(obj);
+                    if (results == null) {
+                        results.add(obj);
+                    }
+                    else {
+                        if (results.contains(obj)) {
+                            Log.d("Find Activity", "found duplicate profile!");
+                        }
+                        else {
+                            Log.d("Find Activity", "found new profile!");
+                            results.add(obj);
+                        }
+                    }
                 }
                 return null;
 

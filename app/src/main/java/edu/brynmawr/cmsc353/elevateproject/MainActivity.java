@@ -78,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(connectionsIntent);
                         break;
                     case R.id.profileView:
-                        //code fragment to see profile
+                        Intent profileIntent = new Intent(getBaseContext(), ProfileActivity.class);
+                        profileIntent.putExtra("userName", currentUser.getFirstname() + " " + currentUser.getLastname());
+                        profileIntent.putExtra("userId", currentUser.getUserId());
+                        profileIntent.putExtra("userProfile", true);
+                        startActivity(profileIntent);
                         break;
                 }
                 //UNCOMMENT THIS WHEN YOU IMPLEMENT FRAGMENTS
