@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp" >
+    android:layout_margin="5dp"
+    android:id="@+id/rl">
 
     <TextView
         android:id="@+id/textView1"
@@ -45,6 +46,7 @@
         android:layout_toRightOf="@+id/textView2"
         android:background="#CCCCCC"
         android:ems="10"
+        android:hint="input"
         android:inputType="text">
         <requestFocus />
     </EditText>
@@ -59,6 +61,7 @@
         android:layout_toRightOf="@+id/textView3"
         android:background="#CCCCCC"
         android:ems="10"
+        android:hint="firstname/lastname..."
         android:inputType="text">
         <requestFocus />
     </EditText>
@@ -76,4 +79,13 @@
         android:text="submit"
         android:textColor="#FFFFFF" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_below="@+id/button1"
+        android:id="@+id/linear">
+    </LinearLayout>
+
 </RelativeLayout>
+

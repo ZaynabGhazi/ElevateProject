@@ -7,10 +7,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import edu.brynmawr.cmsc353.elevateproject.fragments.QuestionAndAnswerFragment;
 import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +23,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //Fragment fragment;
+                Fragment fragment;
                 switch(item.getItemId()){
                     case R.id.opporunitiesView:
                         //code fragment to go to opportunities
@@ -57,16 +62,27 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.threadView:
                         //code fragment to go to q&a
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", currentUser.getFirstname() + " " + currentUser.getLastname());
+                        bundle.putString("userId", currentUser.getUserId());
+                        fragment = new QuestionAndAnswerFragment();
+                        fragment.setArguments(bundle);
+                        mfragmentManager.beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.flContainer,fragment)
+                                .commit();
                         break;
                     case R.id.connectView:
-                        //code fragment to go to connect/matching
+                        Intent connectionsIntent = new Intent(getBaseContext(), FindActivity.class);
+                        connectionsIntent.putExtra("userId", currentUser.getUserId());
+                        startActivity(connectionsIntent);
                         break;
                     case R.id.profileView:
                         //code fragment to see profile
                         break;
                 }
                 //UNCOMMENT THIS WHEN YOU IMPLEMENT FRAGMENTS
-                //mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
+//                mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
                 return true;
             }
         });
@@ -89,7 +105,23 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
-                    //write code to connect to notification activity/fragment
+                    Intent notificationsIntent = new Intent(MainActivity.this, NotificationActivity.class);
+                    notificationsIntent.putExtra("id", currentUser.getUserId());
+                    notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
+                    startActivity(notificationsIntent);
+//                    Yutong's code
+//                    Log.e("notify", "here!");
+//                    //write code to connect to notification activity/fragment
+//                    Intent notificationIntent = new Intent(getBaseContext(), NotificationActivity.class);
+//                    List<String> requests = currentUser.getRequests();
+//                    String requests_str = "";
+//                    for(int i = 0; i< requests.size(); i++){
+//                        requests_str+="request=";
+//                        requests_str += requests.get(i);
+//                        if(i!=requests.size()-1) requests_str+="&";
+//                    }
+//                    notificationIntent.putExtra("currentRequests", requests_str);
+//                    startActivity(notificationIntent);
                 }
                 return true;
             }

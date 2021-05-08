@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="475dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/title_text"
+            android:layout_width="296dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="serif"
+            android:inputType="text"
+            android:hint="Title"
+            android:text=""
+            android:textColorHint="@color/black"
+            android:textColor="@color/black" />
+
+        <ImageButton
+            android:id="@+id/close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/question_text"
+        android:layout_width="match_parent"
+        android:layout_height="327dp"
+        android:ems="10"
+        android:fontFamily="serif"
+        android:gravity="top|start"
+        android:hint="What's your question?"
+        android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
+
+    <Button
+        android:id="@+id/upload_image_button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:backgroundTint="@color/primary"
+        android:textAlignment="gravity"
+        android:text="Select image" />
+
+    <ImageButton
+        android:id="@+id/upload_question_button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/primary"
+        app:srcCompat="@android:drawable/stat_sys_upload_done" />
+
+</LinearLayout>
