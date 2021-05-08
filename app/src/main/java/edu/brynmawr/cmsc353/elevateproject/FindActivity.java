@@ -77,6 +77,9 @@ public class FindActivity extends AppCompatActivity {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linear);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.removeAllViews();
+            if (results.size() == 0){
+                Toast.makeText(FindActivity.this,"No users found!",Toast.LENGTH_SHORT).show();
+            }
             for(int i = 0; i<results.size(); i++) {
                 String requestId = results.get(i).getString("_id");
                 if (!(userId.equals(requestId))) {
