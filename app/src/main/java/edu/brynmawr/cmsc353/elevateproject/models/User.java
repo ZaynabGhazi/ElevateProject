@@ -1,7 +1,5 @@
 package edu.brynmawr.cmsc353.elevateproject.models;
 
-import android.os.Parcelable;
-
 import org.parceler.Parcel;
 import java.util.*;
 
@@ -18,7 +16,6 @@ public class User {
 
 
 
-    public User(){}
     public String getEmail() {
         return email;
     }
@@ -66,6 +63,8 @@ public class User {
     }
 
     public void setConnections(List<String> connections){this.connections = connections; }
+
+    public void setNewConnections(List<String> newConnections){this.newConnections = newConnections; }
 
     public void setRequests(List<String> requests){this.requests= requests; }
 

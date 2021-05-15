@@ -9,8 +9,6 @@ import android.widget.Toast;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.DataOutputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
@@ -59,6 +57,7 @@ public class AuthenticateTask extends AsyncTask<String, String, User> {
 
                 user.setConnections((List)usr.get("connections"));
                 user.setRequests((List)usr.get("requests"));
+                user.setNewConnections((List)usr.get("newConnections"));
 
                 user.setFirstname((String) usr.get("firstname"));
                 user.setLastname((String) usr.get("lastname"));

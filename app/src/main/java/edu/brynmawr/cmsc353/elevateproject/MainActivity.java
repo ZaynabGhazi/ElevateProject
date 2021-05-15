@@ -110,11 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
-//                    Intent notificationsIntent = new Intent(MainActivity.this, NotificationActivity.class);
-//                    notificationsIntent.putExtra("id", currentUser.getUserId());
-//                    notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
-//                    startActivity(notificationsIntent);
-
+                    Log.d("Main Activity", "Notifications!");
                     Intent notificationIntent = new Intent(getBaseContext(), NotificationActivity.class);
                     List<String> requests = currentUser.getRequests();
                     List<String> newConnections = currentUser.getNewConnections();
@@ -125,19 +121,20 @@ public class MainActivity extends AppCompatActivity {
                         requests_str += requests.get(i);
                         if(i!=requests.size()-1) requests_str+="&";
                     }
-//                    for(int i = 0; i< newConnections.size(); i++){
-//                        newConnections_str+="request=";
-//                        newConnections_str += newConnections.get(i);
-//                        if(i!=newConnections.size()-1) newConnections_str+="&";
-//                    }
+                    for(int i = 0; i< newConnections.size(); i++){
+                        Log.d("Main Activity", newConnections_str);
+                        newConnections_str+="request=";
+                        newConnections_str += newConnections.get(i);
+                        if(i!=newConnections.size()-1) newConnections_str+="&";
+                    }
+                    Log.d("Main Activity", "request string: " + requests_str);
                     notificationIntent.putExtra("currentRequests", requests_str);
                     notificationIntent.putExtra("currentId", currentUser.getUserId());
-//                    notificationIntent.putExtra("newConnections", newConnections_str);
+                    notificationIntent.putExtra("newConnections", newConnections_str);
                     startActivity(notificationIntent);
                 }
                 return true;
             }
-
         });
     }
     @Override

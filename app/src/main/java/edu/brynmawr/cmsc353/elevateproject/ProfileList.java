@@ -1,20 +1,15 @@
 package edu.brynmawr.cmsc353.elevateproject;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ProfileList extends Activity {
 
@@ -34,9 +29,9 @@ public class ProfileList extends Activity {
         info = new ArrayList<>();
 
         // create adapter
-        ProfileAdapter profileAdapter = new ProfileAdapter(this, info);
+        ProfileListAdapter profileListAdapter = new ProfileListAdapter(this, info);
         // set the adapter on recycler view
-        profileView.setAdapter(profileAdapter);
+        profileView.setAdapter(profileListAdapter);
         // set layout manager on adapter
         profileView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -50,6 +45,6 @@ public class ProfileList extends Activity {
             results = "";
             profiles = new String[0];
         }
-        profileAdapter.notifyDataSetChanged();
+        profileListAdapter.notifyDataSetChanged();
     }
 }

@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.*;
 
 import java.util.List;
 
-public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder>{
+public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.ViewHolder>{
     
     List<String> profiles;
     Context context;
     
-    public ProfileAdapter(Context context, List<String> results){
+    public ProfileListAdapter(Context context, List<String> results){
         this.context = context;
         this.profiles = results;
     }

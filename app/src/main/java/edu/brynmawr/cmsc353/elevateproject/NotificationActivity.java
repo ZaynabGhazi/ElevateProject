@@ -183,6 +183,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     String requests;
     String userId;
+    String newConnections;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,28 +191,77 @@ public class NotificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notification);
         requests = getIntent().getStringExtra("currentRequests");
         userId = getIntent().getStringExtra("currentId");
+        newConnections = getIntent().getStringExtra("newConnections");
         LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearNotify);
         Button btn_refresh = findViewById(R.id.btn_refresh);
         try {
-            URL url = new URL("http://10.0.2.2:3000/api/user/notify?"+requests);
-            NotifyTask task = new NotifyTask();
-            task.execute(url);
-            JSONArray array = task.get();
-            if (array.length() < 1){
+            //Getting new connections
+            URL cUrl = new URL("http://10.0.2.2:3000/api/user/notify?"+ newConnections);
+            Log.d("Notification Activity", "newConnections url: " + newConnections);
+            NotifyTask cTask = new NotifyTask();
+            cTask.execute(cUrl);
+            JSONArray connections = cTask.get();
+
+            //Getting requests
+            URL rUrl = new URL("http://10.0.2.2:3000/api/user/notify?"+requests);
+            Log.d("Notification Activity", "requests url: " + requests);
+            NotifyTask rTask = new NotifyTask();
+            rTask.execute(rUrl);
+            JSONArray array = rTask.get();
+            Log.d("Notification Activity", "requests: " + array.length());
+
+            if (array.length() < 1 || connections.length() < 1){
                 Log.d("Notification Activity", "requests: " + array.length());
+                Log.d("Notification Activity", "new connections: " + connections.length());
                 refreshPage(btn_refresh);
             }
+
             linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+            // displaying new connections
+            TextView connectionTextView = new TextView(this);
+            String connectionText = "";
+            for (int i = 0; i<connections.length(); i++){
+                Log.d("Notification Activity", "here!");
+                JSONObject acceptConnect = (JSONObject)connections.get(i);
+                connectionText += (acceptConnect.getString("firstname") + " " + acceptConnect.getString("lastname") + " is a new connection. \n");
+            }
+            connectionTextView.setText(connectionText);
+            Log.d("Notification Activity", "connectionText: " + connectionText);
+            Button clearConnectButton = new Button(this);
+            clearConnectButton.setTag(userId);
+            clearConnectButton.setText("Clear Connections from View");
+            clearConnectButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Log.d("on clock accept button", (String)clearConnectButton.getTag());
+                    try {
+                        URL url = new URL("http://10.0.2.2:3000/api/user/clearNewConnection?" + "id_receiver" + "=" + (String)view.getTag());
+                        Log.d("on click clear Connection", (String)view.getTag());
+                        AcceptTask task = new AcceptTask();
+                        task.execute(url);
+                        Toast.makeText(NotificationActivity.this, "Cleared New Connections", Toast.LENGTH_SHORT).show();
+                        connectionTextView.setVisibility(View.GONE);
+                        clearConnectButton.setVisibility(View.GONE);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            linearLayout.addView(connectionTextView);
+            linearLayout.addView(clearConnectButton);
+
+
+            // displaying requests
             for(int i = 0; i<array.length(); i++) {
                 TextView textView = new TextView(this);
                 JSONObject requester = (JSONObject)array.get(i);
                 textView.setText(requester.getString("firstname") + " " + requester.getString("lastname"));
-                Button acceptButton = new Button(this) ;
+                Button acceptButton = new Button(this);
                 Button rejectButton = new Button(this);
                 acceptButton.setText("Accept");
                 rejectButton.setText("Reject");
 
-                //TODO: set onclick listener for buttons. May refer to FindActivity. You may also need the current user's id, for which you can use putExtra in main activity(see line 108).
                 acceptButton.setTag(requester.getString("_id") ); //set tag to keep track of each requester's id
                 acceptButton.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -226,8 +276,6 @@ public class NotificationActivity extends AppCompatActivity {
                             textView.setVisibility(View.GONE);
                             acceptButton.setVisibility(View.GONE);
                             rejectButton.setVisibility(View.GONE);
-
-
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         } catch (ExecutionException | InterruptedException e) {
@@ -236,7 +284,6 @@ public class NotificationActivity extends AppCompatActivity {
                     }
                 });
 
-                //TODO: set onclick listener for reject, clear after click if possible.
                 rejectButton.setTag(requester.getString("_id"));
                 rejectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -259,8 +306,6 @@ public class NotificationActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
                 linearLayout.addView(textView);
                 linearLayout.addView(acceptButton);
                 linearLayout.addView(rejectButton);
@@ -285,6 +330,7 @@ public class NotificationActivity extends AppCompatActivity {
                     Intent notificationsIntent = new Intent(NotificationActivity.this, NotificationActivity.class);
                     notificationsIntent.putExtra("currentId", userId);
                     notificationsIntent.putExtra("currentRequests", requests);
+                    notificationsIntent.putExtra("newConnections", newConnections);
                     finish();
                     startActivity(notificationsIntent);
                 }
