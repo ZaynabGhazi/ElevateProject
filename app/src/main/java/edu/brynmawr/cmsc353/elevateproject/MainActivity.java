@@ -122,12 +122,10 @@ public class MainActivity extends AppCompatActivity {
                         if(i!=requests.size()-1) requests_str+="&";
                     }
                     for(int i = 0; i< newConnections.size(); i++){
-                        Log.d("Main Activity", newConnections_str);
                         newConnections_str+="request=";
                         newConnections_str += newConnections.get(i);
                         if(i!=newConnections.size()-1) newConnections_str+="&";
                     }
-                    Log.d("Main Activity", "request string: " + requests_str);
                     notificationIntent.putExtra("currentRequests", requests_str);
                     notificationIntent.putExtra("currentId", currentUser.getUserId());
                     notificationIntent.putExtra("newConnections", newConnections_str);

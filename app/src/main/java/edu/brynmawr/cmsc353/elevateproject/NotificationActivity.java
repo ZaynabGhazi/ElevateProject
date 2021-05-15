@@ -203,112 +203,128 @@ public class NotificationActivity extends AppCompatActivity {
             JSONArray connections = cTask.get();
 
             //Getting requests
-            URL rUrl = new URL("http://10.0.2.2:3000/api/user/notify?"+requests);
+            URL rUrl = new URL("http://10.0.2.2:3000/api/user/notify?"+ requests);
             Log.d("Notification Activity", "requests url: " + requests);
             NotifyTask rTask = new NotifyTask();
             rTask.execute(rUrl);
             JSONArray array = rTask.get();
-            Log.d("Notification Activity", "requests: " + array.length());
 
-            if (array.length() < 1 || connections.length() < 1){
-                Log.d("Notification Activity", "requests: " + array.length());
-                Log.d("Notification Activity", "new connections: " + connections.length());
+            if (array == null || connections == null || array.length() < 1 || connections.length() < 1){
+                if (array != null) {
+                    Log.d("Notification Activity", "requests: " + array.length());
+                }
+                if (connections != null) {
+                    Log.d("Notification Activity", "new connections: " + connections.length());
+                }
                 refreshPage(btn_refresh);
             }
 
             linearLayout.setOrientation(LinearLayout.VERTICAL);
 
             // displaying new connections
-            TextView connectionTextView = new TextView(this);
-            String connectionText = "";
-            for (int i = 0; i<connections.length(); i++){
-                Log.d("Notification Activity", "here!");
-                JSONObject acceptConnect = (JSONObject)connections.get(i);
-                connectionText += (acceptConnect.getString("firstname") + " " + acceptConnect.getString("lastname") + " is a new connection. \n");
-            }
-            connectionTextView.setText(connectionText);
-            Log.d("Notification Activity", "connectionText: " + connectionText);
-            Button clearConnectButton = new Button(this);
-            clearConnectButton.setTag(userId);
-            clearConnectButton.setText("Clear Connections from View");
-            clearConnectButton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    Log.d("on clock accept button", (String)clearConnectButton.getTag());
-                    try {
-                        URL url = new URL("http://10.0.2.2:3000/api/user/clearNewConnection?" + "id_receiver" + "=" + (String)view.getTag());
-                        Log.d("on click clear Connection", (String)view.getTag());
-                        AcceptTask task = new AcceptTask();
-                        task.execute(url);
-                        Toast.makeText(NotificationActivity.this, "Cleared New Connections", Toast.LENGTH_SHORT).show();
-                        connectionTextView.setVisibility(View.GONE);
-                        clearConnectButton.setVisibility(View.GONE);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+            if (connections != null) {
+                TextView connectionTextView = new TextView(this);
+                String connectionText = "";
+                for (int i = 0; i < connections.length(); i++) {
+                    Log.d("Notification Activity", "here!");
+                    JSONObject acceptConnect = (JSONObject) connections.get(i);
+                    connectionText += (acceptConnect.getString("firstname") + " " + acceptConnect.getString("lastname") + " is a new connection. \n");
                 }
-            });
-            linearLayout.addView(connectionTextView);
-            linearLayout.addView(clearConnectButton);
+                connectionTextView.setText(connectionText);
+                Log.d("Notification Activity", "connectionText: " + connectionText);
+                linearLayout.addView(connectionTextView);
+                if (connectionText.length() >= 1) {
+                    Button clearConnectButton = new Button(this);
+                    clearConnectButton.setTag(userId);
+                    clearConnectButton.setText("Clear Connections from View");
+                    clearConnectButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("on clock accept button", (String) clearConnectButton.getTag());
+                            try {
+                                URL url = new URL("http://10.0.2.2:3000/api/user/clearNewConnection");
+                                Log.d("on click clear Connection", (String) view.getTag());
+                                AcceptTask task = new AcceptTask();
+                                task.execute(url);
+                                Toast.makeText(NotificationActivity.this, "Cleared New Connections", Toast.LENGTH_SHORT).show();
+                                connectionTextView.setVisibility(View.GONE);
+                                clearConnectButton.setVisibility(View.GONE);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    linearLayout.addView(clearConnectButton);
+                }
+
+            }
 
 
             // displaying requests
-            for(int i = 0; i<array.length(); i++) {
-                TextView textView = new TextView(this);
-                JSONObject requester = (JSONObject)array.get(i);
-                textView.setText(requester.getString("firstname") + " " + requester.getString("lastname"));
-                Button acceptButton = new Button(this);
-                Button rejectButton = new Button(this);
-                acceptButton.setText("Accept");
-                rejectButton.setText("Reject");
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    TextView textView = new TextView(this);
+                    JSONObject requester = (JSONObject) array.get(i);
+                    textView.setText(requester.getString("firstname") + " " + requester.getString("lastname"));
+                    Button acceptButton = new Button(this);
+                    Button rejectButton = new Button(this);
+                    acceptButton.setText("Accept");
+                    rejectButton.setText("Reject");
 
-                acceptButton.setTag(requester.getString("_id") ); //set tag to keep track of each requester's id
-                acceptButton.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("on clock accept button", (String)acceptButton.getTag());
-                        try {
-                            URL url = new URL("http://10.0.2.2:3000/api/user/accept?" + "id_sender" + "=" + (String)view.getTag()+ "&" + "id_receiver" + "=" + userId);
-                            Log.d("on click accept button", (String)view.getTag());
-                            AcceptTask task = new AcceptTask();
-                            task.execute(url);
-                            Toast.makeText(NotificationActivity.this, task.get(), Toast.LENGTH_SHORT).show();
-                            textView.setVisibility(View.GONE);
-                            acceptButton.setVisibility(View.GONE);
-                            rejectButton.setVisibility(View.GONE);
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                    //TODO: set onclick listener for buttons. May refer to FindActivity. You may also need the current user's id, for which you can use putExtra in main activity(see line 108).
+                    acceptButton.setTag(requester.getString("_id")); //set tag to keep track of each requester's id
+                    acceptButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("on clock accept button", (String) acceptButton.getTag());
+                            try {
+                                URL url = new URL("http://10.0.2.2:3000/api/user/accept?" + "id_sender" + "=" + (String) view.getTag() + "&" + "id_receiver" + "=" + userId);
+                                Log.d("on click accept button", (String) view.getTag());
+                                AcceptTask task = new AcceptTask();
+                                task.execute(url);
+                                Toast.makeText(NotificationActivity.this, task.get(), Toast.LENGTH_SHORT).show();
+                                textView.setVisibility(View.GONE);
+                                acceptButton.setVisibility(View.GONE);
+                                rejectButton.setVisibility(View.GONE);
 
-                rejectButton.setTag(requester.getString("_id"));
-                rejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("on click reject button", (String)rejectButton.getTag());
-                        try {
-                            URL url = new URL("http://10.0.2.2:3000/api/user/reject?" + "id_sender" + "=" + (String)view.getTag() + "&" + "id_receiver" + "=" + userId);
-                            Log.d("on click reject button", (String)view.getTag());
-                            RejectTask task = new RejectTask();
-                            task.execute(url);
-                            //Log.d("check reject task", task.get());
-                            Toast.makeText(NotificationActivity.this, task.get(), Toast.LENGTH_SHORT).show();
-                            textView.setVisibility(View.GONE);
-                            acceptButton.setVisibility(View.GONE);
-                            rejectButton.setVisibility(View.GONE);
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
+
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                });
-                linearLayout.addView(textView);
-                linearLayout.addView(acceptButton);
-                linearLayout.addView(rejectButton);
+                    });
+
+                    //TODO: set onclick listener for reject, clear after click if possible.
+                    rejectButton.setTag(requester.getString("_id"));
+                    rejectButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("on click reject button", (String) rejectButton.getTag());
+                            try {
+                                URL url = new URL("http://10.0.2.2:3000/api/user/reject?" + "id_sender" + "=" + (String) view.getTag() + "&" + "id_receiver" + "=" + userId);
+                                Log.d("on click reject button", (String) view.getTag());
+                                RejectTask task = new RejectTask();
+                                task.execute(url);
+                                //Log.d("check reject task", task.get());
+                                Toast.makeText(NotificationActivity.this, task.get(), Toast.LENGTH_SHORT).show();
+                                textView.setVisibility(View.GONE);
+                                acceptButton.setVisibility(View.GONE);
+                                rejectButton.setVisibility(View.GONE);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                    linearLayout.addView(textView);
+                    linearLayout.addView(acceptButton);
+                    linearLayout.addView(rejectButton);
+                }
             }
         } catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
