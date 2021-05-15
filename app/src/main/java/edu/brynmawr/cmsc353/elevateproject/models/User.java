@@ -13,6 +13,7 @@ public class User {
     private String lastname;
     private String userId;
     private List<String> connections;
+    private List<String> newConnections;
     private List<String> requests;
 
 
@@ -39,6 +40,8 @@ public class User {
     }
 
     public List<String> getConnections(){return connections;}
+
+    public List<String> getNewConnections(){return newConnections;}
 
     public List<String> getRequests(){return requests;}
 

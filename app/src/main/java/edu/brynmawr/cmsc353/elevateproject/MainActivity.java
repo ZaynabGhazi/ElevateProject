@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setupNavigationDrawer();
         if (getIntent().hasExtra("currentuser")){
             currentUser = (User) Parcels.unwrap(getIntent().getParcelableExtra("currentuser"));
-            Toast.makeText(MainActivity.this,"Welcome "+currentUser.getUserId(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,"Welcome "+currentUser.getFirstname()+" "+currentUser.getLastname(),Toast.LENGTH_SHORT).show();
         }
         mfragmentManager = getSupportFragmentManager();
         setupFragments();
@@ -109,23 +109,30 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (id == R.id.notifications){
-                    Intent notificationsIntent = new Intent(MainActivity.this, NotificationActivity.class);
-                    notificationsIntent.putExtra("id", currentUser.getUserId());
-                    notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
-                    startActivity(notificationsIntent);
-//                    Yutong's code
-//                    Log.e("notify", "here!");
-//                    //write code to connect to notification activity/fragment
-//                    Intent notificationIntent = new Intent(getBaseContext(), NotificationActivity.class);
-//                    List<String> requests = currentUser.getRequests();
-//                    String requests_str = "";
-//                    for(int i = 0; i< requests.size(); i++){
-//                        requests_str+="request=";
-//                        requests_str += requests.get(i);
-//                        if(i!=requests.size()-1) requests_str+="&";
+//                    Intent notificationsIntent = new Intent(MainActivity.this, NotificationActivity.class);
+//                    notificationsIntent.putExtra("id", currentUser.getUserId());
+//                    notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)currentUser.getRequests());
+//                    startActivity(notificationsIntent);
+
+                    Intent notificationIntent = new Intent(getBaseContext(), NotificationActivity.class);
+                    List<String> requests = currentUser.getRequests();
+                    List<String> newConnections = currentUser.getNewConnections();
+                    String requests_str = "";
+                    String newConnections_str = "";
+                    for(int i = 0; i< requests.size(); i++){
+                        requests_str+="request=";
+                        requests_str += requests.get(i);
+                        if(i!=requests.size()-1) requests_str+="&";
+                    }
+//                    for(int i = 0; i< newConnections.size(); i++){
+//                        newConnections_str+="request=";
+//                        newConnections_str += newConnections.get(i);
+//                        if(i!=newConnections.size()-1) newConnections_str+="&";
 //                    }
-//                    notificationIntent.putExtra("currentRequests", requests_str);
-//                    startActivity(notificationIntent);
+                    notificationIntent.putExtra("currentRequests", requests_str);
+                    notificationIntent.putExtra("currentId", currentUser.getUserId());
+//                    notificationIntent.putExtra("newConnections", newConnections_str);
+                    startActivity(notificationIntent);
                 }
                 return true;
             }

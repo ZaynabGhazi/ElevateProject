@@ -1,8 +1,10 @@
 package edu.brynmawr.cmsc353.elevateproject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,65 +15,59 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
-import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.brynmawr.cmsc353.elevateproject.models.User;
 
 // Dana's code
+
 //public class NotificationActivity extends AppCompatActivity {
 //
 //    static List<JSONObject> results = new ArrayList<JSONObject>();
 //    List<String> notifications = new ArrayList<String>();
+//    Button btnRefresh;
+//    String currentUser;
+//    ArrayList<String> requests;
 //
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
-//
+//        results.clear();
+//        Intent intent = getIntent();
 //        super.onCreate(savedInstanceState);
 //        String requestURL = parseRequestUrl();
+//        getExtras(intent);
 //        List<String> usersInfo = getUserInfo(requestURL);
 //        setUpActivity(usersInfo);
+//        btnRefresh = findViewById(R.id.btnRefresh);
+//        if(results.size() < 1 || results == null) {
+//            refreshPage();
+//        }
+//
 //    }
 //
-////    private static class RequestTask extends AsyncTask<URL, String, String>{
-////        @Override
-////        protected String doInBackground(URL...urls) {
-////            try {
-////                URL url = urls[0];
-////
-////                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-////                conn.setRequestMethod("GET");
-////                conn.connect();
-////
-////                Scanner in = new Scanner(url.openStream());
-////                String response = in.nextLine();
-////
-////                JSONObject jo = new JSONObject(response);
-////
-////                return jo.getString("message");
-////
-////            }
-////            catch (Exception e) {
-////                //return e.toString();
-////                return null;
-////            }
-////        }
-////    }
+//    private void getExtras(Intent intent){
+//        currentUser = intent.getStringExtra("id");
+//        requests = intent.getStringArrayListExtra("requests");
+//    }
+//
+//    private void refreshPage(){
+//        btnRefresh.setVisibility(View.VISIBLE);
+//        btnRefresh.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d("NotificationActivity", "Refresh button clicked");
+//                Intent notificationsIntent = new Intent(NotificationActivity.this, NotificationActivity.class);
+//                notificationsIntent.putExtra("id", currentUser);
+//                notificationsIntent.putStringArrayListExtra("requests", (ArrayList<String>)requests);
+//                finish();
+//                startActivity(notificationsIntent);
+//            }
+//        });
+//    }
 //
 //    private static class MyTask extends AsyncTask<URL, Void, Void>{
 //        @Override
@@ -91,8 +87,18 @@ import edu.brynmawr.cmsc353.elevateproject.models.User;
 //                Log.d("Notification Activity", "here!");
 //                for(int i = 0; i < array.length(); i++){
 //                    JSONObject obj = array.getJSONObject(i);
-//                    results.add(obj);
-//                    Log.d("Notification Activity", "Adding " + i + "th object!");
+//                    if (results == null) {
+//                        results.add(obj);
+//                    }
+//                    else {
+//                        if (results.contains(obj)) {
+//                            Log.d("Notification Activity", "found duplicate profile!");
+//                        }
+//                        else {
+//                            Log.d("Notification Activity", "found new profile!");
+//                            results.add(obj);
+//                        }
+//                    }
 //                }
 //                return null;
 //
@@ -154,39 +160,110 @@ import edu.brynmawr.cmsc353.elevateproject.models.User;
 //        NotificationAdapter notificationAdapter = new NotificationAdapter(NotificationActivity.this, notifications, getIntent().getStringExtra("id"));
 //        notificationList.setAdapter(notificationAdapter);
 //        notificationList.setLayoutManager((new LinearLayoutManager(this)));
-//        notifications.addAll(usersInfo);
+//        for (int i = 0; i < usersInfo.size(); i++){
+//            if (notifications.size() == 0){
+//                notifications.addAll(usersInfo);
+//            }
+//            else {
+//                if (notifications.contains(usersInfo.get(i))) {
+//                    Log.d("Notification Activity", "request already in array!");
+//                } else {
+//                    notifications.add(usersInfo.get(i));
+//                }
+//            }
+//        }
+//
+//        Log.d("Notification Activity", "There are " + requests.size() + " notifications");
 //        notificationAdapter.notifyDataSetChanged();
+//        Log.d("Notification Activity", "Data set changed");
 //    }
 //}
 
-// Yutong's code
 public class NotificationActivity extends AppCompatActivity {
+
+    String requests;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-        String requests = getIntent().getStringExtra("currentRequests");
+        requests = getIntent().getStringExtra("currentRequests");
+        userId = getIntent().getStringExtra("currentId");
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearNotify);
+        Button btn_refresh = findViewById(R.id.btn_refresh);
         try {
-
-            URL url = new URL("http://10.0.2.2:3000/api/user/notify?" + requests);
+            URL url = new URL("http://10.0.2.2:3000/api/user/notify?"+requests);
             NotifyTask task = new NotifyTask();
             task.execute(url);
             JSONArray array = task.get();
-
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearNotify);
+            if (array.length() < 1){
+                Log.d("Notification Activity", "requests: " + array.length());
+                refreshPage(btn_refresh);
+            }
             linearLayout.setOrientation(LinearLayout.VERTICAL);
-            for (int i = 0; i < array.length(); i++) {
+            for(int i = 0; i<array.length(); i++) {
                 TextView textView = new TextView(this);
-                JSONObject requester = (JSONObject) array.get(i);
+                JSONObject requester = (JSONObject)array.get(i);
                 textView.setText(requester.getString("firstname") + " " + requester.getString("lastname"));
-                Button requestButton = new Button(this);
-                requestButton.setText("Accept");
-                requestButton.setTag(requester.getString("_id")); //set tag to keep track of each requester's id
+                Button acceptButton = new Button(this) ;
+                Button rejectButton = new Button(this);
+                acceptButton.setText("Accept");
+                rejectButton.setText("Reject");
+
                 //TODO: set onclick listener for buttons. May refer to FindActivity. You may also need the current user's id, for which you can use putExtra in main activity(see line 108).
+                acceptButton.setTag(requester.getString("_id") ); //set tag to keep track of each requester's id
+                acceptButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("on clock accept button", (String)acceptButton.getTag());
+                        try {
+                            URL url = new URL("http://10.0.2.2:3000/api/user/accept?" + "id_sender" + "=" + (String)view.getTag()+ "&" + "id_receiver" + "=" + userId);
+                            Log.d("on click accept button", (String)view.getTag());
+                            AcceptTask task = new AcceptTask();
+                            task.execute(url);
+                            Toast.makeText(NotificationActivity.this, task.get(), Toast.LENGTH_SHORT).show();
+                            textView.setVisibility(View.GONE);
+                            acceptButton.setVisibility(View.GONE);
+                            rejectButton.setVisibility(View.GONE);
+
+
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                //TODO: set onclick listener for reject, clear after click if possible.
+                rejectButton.setTag(requester.getString("_id"));
+                rejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("on click reject button", (String)rejectButton.getTag());
+                        try {
+                            URL url = new URL("http://10.0.2.2:3000/api/user/reject?" + "id_sender" + "=" + (String)view.getTag() + "&" + "id_receiver" + "=" + userId);
+                            Log.d("on click reject button", (String)view.getTag());
+                            RejectTask task = new RejectTask();
+                            task.execute(url);
+                            //Log.d("check reject task", task.get());
+                            Toast.makeText(NotificationActivity.this, task.get(), Toast.LENGTH_SHORT).show();
+                            textView.setVisibility(View.GONE);
+                            acceptButton.setVisibility(View.GONE);
+                            rejectButton.setVisibility(View.GONE);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
 
                 linearLayout.addView(textView);
-                linearLayout.addView(requestButton);
+                linearLayout.addView(acceptButton);
+                linearLayout.addView(rejectButton);
             }
         } catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
@@ -199,9 +276,24 @@ public class NotificationActivity extends AppCompatActivity {
         }
     }
 
-    private static class NotifyTask extends AsyncTask<URL, JSONArray, JSONArray> {
+        private void refreshPage(Button btnRefresh){
+            btnRefresh.setVisibility(View.VISIBLE);
+            btnRefresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("NotificationActivity", "Refresh button clicked");
+                    Intent notificationsIntent = new Intent(NotificationActivity.this, NotificationActivity.class);
+                    notificationsIntent.putExtra("currentId", userId);
+                    notificationsIntent.putExtra("currentRequests", requests);
+                    finish();
+                    startActivity(notificationsIntent);
+                }
+            });
+    }
+
+    private static class NotifyTask extends AsyncTask<URL, JSONArray, JSONArray>{
         @Override
-        protected JSONArray doInBackground(URL... urls) {
+        protected JSONArray doInBackground(URL...urls) {
             try {
                 URL url = urls[0];
 
@@ -216,7 +308,59 @@ public class NotificationActivity extends AppCompatActivity {
 
                 return array;
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
+                //return e.toString();
+                return null;
+            }
+        }
+    }
+
+
+    private static class AcceptTask extends AsyncTask<URL, String, String>{
+        @Override
+        protected String doInBackground(URL...urls) {
+            try {
+                URL url = urls[0];
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+
+                Scanner in = new Scanner(url.openStream());
+                String response = in.nextLine();
+
+                JSONObject jo = new JSONObject(response);
+
+                return jo.getString("message");
+
+            }
+            catch (Exception e) {
+                //return e.toString();
+                return null;
+            }
+        }
+    }
+
+    private static class RejectTask extends AsyncTask<URL, String, String>{
+        @Override
+        protected String doInBackground(URL...urls) {
+            try {
+                URL url = urls[0];
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+
+                Scanner in = new Scanner(url.openStream());
+                String response = in.nextLine();
+
+                JSONObject jo = new JSONObject(response);
+
+                return jo.getString("message");
+
+            }
+            catch (Exception e) {
                 //return e.toString();
                 return null;
             }
