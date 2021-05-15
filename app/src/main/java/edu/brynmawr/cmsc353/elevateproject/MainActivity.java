@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setReorderingAllowed(true)
                                 .replace(R.id.flContainer,fragment)
                                 .commit();
+                        mfragmentManager.beginTransaction().replace(R.id.flContainer,fragment).commit();
                         break;
                     case R.id.connectView:
                         Intent connectionsIntent = new Intent(getBaseContext(), FindActivity.class);
